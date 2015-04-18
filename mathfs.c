@@ -1,9 +1,9 @@
 /*TODO:
- * Get below 1 directory level working
- * Make math functions.
+ * Add math functions to mathfs.
  * Make math functions work.
  * Make write up
- * Think of more things to do.
+ * Create doc entries in math folders.
+ * Remove mathfs file.
  */
 
 
