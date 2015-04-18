@@ -24,6 +24,8 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 
 //Directory path names and some test text.
 static const char *mathfs_str = "You've done something right!\nI think...\n";
@@ -35,7 +37,91 @@ const char* div_path = "/div";
 const char* exp_path = "/exp";
 const char* fib_path = "/fib";
 const char* fac_path = "/factor";
+char* result_ptr;
 
+void make_dir(struct stat *stbuf){
+
+	stbuf->st_mode = S_IFDIR | 0755;
+	stbuf->st_nlink = 3;
+	stbuf->st_size = 0;
+	return;
+}
+
+void make_file(struct stat *stbuf, char* result_string){
+
+	stbuf->st_mode = S_IFREG | 0444;
+	stbuf->st_nlink = 1;
+	stbuf->st_size = strlen(mathfs_str);
+	return;
+}
+
+int valid_path(const char *path, struct stat *stbuf)
+{
+	char *path_copy = (char*) calloc(strlen(path)+1,sizeof(char));
+	strcpy(path_copy,path);
+
+	int case_switch = 0, ret = 9;
+	char * path_arg = strtok(path_copy,"/");
+	double dub1 = 0, dub2 = 0;
+	int int1 = 0, int2 = 0;
+
+
+	//If accessing add/sub/mul/div/exp
+	if(strcmp(path_arg,"add") == 0 || strcmp(path_arg,"sub")== 0 ||
+	   strcmp(path_arg,"mul") == 0 || strcmp(path_arg,"div")== 0 ||
+	   strcmp(path_arg,"exp") == 0)
+		case_switch = 1;
+	//If accessing fib/factor
+	else if(strcmp(path_arg,"fib") == 0 || strcmp(path_arg,"factor") == 0)
+		case_switch = 2;
+
+	switch (case_switch){
+	 case 1://Expect 2 "arguments"
+		path_arg = strtok(NULL,"/");	//Get first folder
+		if (path_arg == NULL){		//If not there, make a directory
+			make_dir(stbuf);
+			ret = 0;
+			break;
+		} else 				//If there, grab it from string
+			dub1 = strtod(path_arg,NULL);
+		
+		path_arg = strtok(NULL,"/");	//Get second folder
+		if (path_arg == NULL) {		//If not there, make a directory
+			make_dir(stbuf);
+			ret = 0;
+			break;
+		} else				//If there, grab a string
+			dub2 = strtod(path_arg,NULL);
+		break;
+	 case 2://Expect 1 "argument"
+		path_arg = strtok(NULL,"/");	//Get first folder
+		if (path_arg == NULL){		//If not there, make a directory
+			make_dir(stbuf);
+			ret = 0;
+			break;
+		} else 				//If there, grab it from string
+			dub1 = strtod(path_arg,NULL);
+		break;
+	default:
+		ret = -ENOENT;
+		break;
+	}
+
+	if(ret == 9){
+		//Have necessary folders, do operation.
+		/*
+		*DO OPERATIONS HERE
+ 		*DO OPERATIONS HERE
+		*DO OPERATIONS HERE
+		*DO OPERATIONS HERE
+ 		*/
+		make_file(stbuf,result_ptr);
+		ret = 0;
+	}
+	
+	free(path_copy);
+	return ret;
+}
 
 /*
  *Set file properties in this function.
@@ -62,7 +148,7 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, add_path) == 0) {
+	 /*else if (strcmp(path, add_path) == 0) {
 		stbuf->st_mode = S_IFDIR | 0755;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
@@ -96,9 +182,9 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 		stbuf->st_mode = S_IFDIR | 0755;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
-	} 
+	}*/ 
 	 else
-		res = -ENOENT;
+		res = valid_path(path,stbuf);
 
 	return res;
 }
