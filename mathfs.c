@@ -37,6 +37,13 @@ const char* div_path = "/div";
 const char* exp_path = "/exp";
 const char* fib_path = "/fib";
 const char* fac_path = "/factor";
+const char* add_doc_path= "/add/doc";
+const char* sub_doc_path = "/sub/doc";
+const char* mul_doc_path = "/mul/doc";
+const char* div_doc_path = "/div/doc";
+const char* exp_doc_path = "/exp/doc";
+const char* fib_doc_path = "/fib/doc";
+const char* fac_doc_path = "/factor/doc";
 char* result_ptr;
 
 void make_dir(struct stat *stbuf){
@@ -148,41 +155,41 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 /*else if (strcmp(path, add_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, add_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, sub_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, sub_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, mul_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, mul_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, div_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, div_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, exp_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, exp_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, fib_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, fib_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
 	} 
-	 else if (strcmp(path, fac_path) == 0) {
-		stbuf->st_mode = S_IFDIR | 0755;
+	 else if (strcmp(path, fac_doc_path) == 0) {
+		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(mathfs_str);
-	}*/ 
+	}
 	 else
 		res = valid_path(path,stbuf);
 
@@ -202,20 +209,49 @@ static int mathfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 	(void) fi;
 	printf("readdir(\"%s\")\n",path);
 
-	if (strcmp(path, "/") != 0)
+//	if (strcmp(path, "/") != 0)
+//		return -ENOENT;
+	if (strcmp(path,"/") == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, mathfs_path + 1, NULL, 0);
+		filler(buf, add_path + 1, NULL, 0);
+		filler(buf, sub_path + 1, NULL, 0);
+		filler(buf, mul_path + 1, NULL, 0);
+		filler(buf, div_path + 1, NULL, 0);
+		filler(buf, exp_path + 1, NULL, 0);
+		filler(buf, fib_path + 1, NULL, 0);
+		filler(buf, fac_path + 1, NULL, 0);
+	}else if(strcmp(path,add_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,sub_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,mul_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,div_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,exp_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,fib_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(strcmp(path,fac_path) == 0){
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
+		filler(buf, "/doc" + 1, NULL, 0);
+	}else
 		return -ENOENT;
-
-	filler(buf, ".", NULL, 0);
-	filler(buf, "..", NULL, 0);
-	filler(buf, mathfs_path + 1, NULL, 0);
-	filler(buf, add_path + 1, NULL, 0);
-	filler(buf, sub_path + 1, NULL, 0);
-	filler(buf, mul_path + 1, NULL, 0);
-	filler(buf, div_path + 1, NULL, 0);
-	filler(buf, exp_path + 1, NULL, 0);
-	filler(buf, fib_path + 1, NULL, 0);
-	filler(buf, fac_path + 1, NULL, 0);
-
 	return 0;
 }
 
