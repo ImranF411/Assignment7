@@ -45,6 +45,7 @@ const char* div_doc_path = "/div/doc";
 const char* exp_doc_path = "/exp/doc";
 const char* fib_doc_path = "/fib/doc";
 const char* fac_doc_path = "/factor/doc";
+/*Doc file strings go here*/
 char* result_ptr;
 
 void make_dir(struct stat *stbuf){
@@ -162,8 +163,10 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 		stbuf->st_size = strlen(mathfs_str);
 	} 
 	 else if (strcmp(path, add_doc_path) == 0) {
+		//Set result_ptr here to appropriate doc string
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
+		//Change strlen(mathfs_str) to strlen(result_ptr);
 		stbuf->st_size = strlen(mathfs_str);
 	} 
 	 else if (strcmp(path, sub_doc_path) == 0) {
@@ -309,24 +312,25 @@ static int mathfs_read(const char *path, char *buf, size_t size, off_t offset,
 
 	if(strcmp(path, mathfs_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, add_path) == 0)
+	if(strcmp(path, add_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, sub_path) == 0)
+	if(strcmp(path, sub_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, mul_path) == 0)
+	if(strcmp(path, mul_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, div_path) == 0)
+	if(strcmp(path, div_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, exp_path) == 0)
+	if(strcmp(path, exp_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, fib_path) == 0)
+	if(strcmp(path, fib_doc_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, fac_path) == 0)
+	if(strcmp(path, fac_doc_path) == 0)
 		bad_read = 0;
 	
 	if(bad_read == 1)
 		return -ENOENT;
-
+	
+	//In below lines, replace mathfs_str to result_ptr
 	len = strlen(mathfs_str);
 	if (offset < len) {
 		if (offset + size > len)
