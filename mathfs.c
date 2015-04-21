@@ -26,6 +26,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include "functions.h"
 
 //Directory path names and some test text.
 static const char *mathfs_str = "You've done something right!\nI think...\n";
@@ -58,7 +59,7 @@ void make_file(struct stat *stbuf, char* result_string){
 
 	stbuf->st_mode = S_IFREG | 0444;
 	stbuf->st_nlink = 1;
-	stbuf->st_size = strlen(mathfs_str);
+	stbuf->st_size = strlen(result_string);
 	return;
 }
 
@@ -69,8 +70,8 @@ int valid_path(const char *path, struct stat *stbuf)
 
 	int case_switch = 0, ret = 9;
 	char * path_arg = strtok(path_copy,"/");
-	double dub1 = 0, dub2 = 0;
-	int int1 = 0, int2 = 0;
+	char * arg1;
+	char * arg2;
 
 
 	//If accessing add/sub/mul/div/exp
@@ -84,30 +85,27 @@ int valid_path(const char *path, struct stat *stbuf)
 
 	switch (case_switch){
 	 case 1://Expect 2 "arguments"
-		path_arg = strtok(NULL,"/");	//Get first folder
-		if (path_arg == NULL){		//If not there, make a directory
+		arg1 = strtok(NULL,"/");	//Get first folder
+		if (arg1 == NULL){		//If not there, make a directory
 			make_dir(stbuf);
 			ret = 0;
 			break;
-		} else 				//If there, grab it from string
-			dub1 = strtod(path_arg,NULL);
+		}
 		
-		path_arg = strtok(NULL,"/");	//Get second folder
-		if (path_arg == NULL) {		//If not there, make a directory
+		arg2 = strtok(NULL,"/");	//Get second folder
+		if (arg2 == NULL) {		//If not there, make a directory
 			make_dir(stbuf);
 			ret = 0;
 			break;
-		} else				//If there, grab a string
-			dub2 = strtod(path_arg,NULL);
+		}
 		break;
 	 case 2://Expect 1 "argument"
-		path_arg = strtok(NULL,"/");	//Get first folder
-		if (path_arg == NULL){		//If not there, make a directory
+		arg1 = strtok(NULL,"/");	//Get first folder
+		if (arg1 == NULL){		//If not there, make a directory
 			make_dir(stbuf);
 			ret = 0;
 			break;
-		} else 				//If there, grab it from string
-			dub1 = strtod(path_arg,NULL);
+		}
 		break;
 	default:
 		ret = -ENOENT;
@@ -116,12 +114,20 @@ int valid_path(const char *path, struct stat *stbuf)
 
 	if(ret == 9){
 		//Have necessary folders, do operation.
-		/*
-		*DO OPERATIONS HERE
- 		*DO OPERATIONS HERE
-		*DO OPERATIONS HERE
-		*DO OPERATIONS HERE
- 		*/
+		if(strcmp(path_arg,"add") == 0)
+			result_ptr = add(arg1,arg2);
+		if(strcmp(path_arg,"sub") == 0)
+			result_ptr = subtract(arg1,arg2);
+		if(strcmp(path_arg,"mul") == 0)
+			result_ptr = multiply(arg1,arg2);
+		if(strcmp(path_arg,"div") == 0)
+			result_ptr = divide(arg1,arg2);
+		if(strcmp(path_arg,"exp") == 0)
+			result_ptr = exponent(arg1,arg2);
+		if(strcmp(path_arg,"fib") == 0)
+			result_ptr = fibonacci(arg1);
+		if(strcmp(path_arg,"factor") == 0)
+			result_ptr = factor(arg1);
 		make_file(stbuf,result_ptr);
 		ret = 0;
 	}

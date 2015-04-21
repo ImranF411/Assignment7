@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 char* factor (char* number);
 char* fibonacci (char* number);
@@ -13,34 +14,51 @@ char* exponent(char* number, char* exponent);
 int isPrime(int number);
 
 int not_main(int argc, char** argv){
-	fibonacci("22");
+	factor("223092870");
 	return 0;
 }
 
+int numbersOnly(char* toCheck){
+	int i;
+	for(i = 0;i<strlen(toCheck);i++){
+		if(isalpha(toCheck[i]) != 0)
+			return -1;		//Character is a letter.
+	}
+	return 0;				//All characters are not letters.
+	
+}
+
 char* factor (char* number){
-	char retchar = malloc(1000);
-	char tempchar = malloc(50);
-	float f = 0;
+	char* retchar = (char *)malloc(1000);
+	char* tempchar = (char *)malloc(50);
+	double f = 0;
 	int i = 0;
-	f = (float)atof(number);
+	if(numbersOnly(number) == -1){
+		char * letter_found = "Number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f = strtod(number,NULL);
 
 	if(f == 0){
-		printf("Cannot factor, bad input\n");
-		return;
+		char * error_msg = "Cannot factor, bad input\n";
+		printf("%s",error_msg);
+		return error_msg;
 	}
 
 	while( i < strlen(number)){   //(sizeof(number)/sizeof(char*))){
 		if(number[i] == '.'){
-			printf("Cannot factor, bad input\n");
-			return;
+			char * error_fact = "Cannot factor, bad input\n";
+			printf("%s",error_fact);
+			return error_fact;
 		}
 		i++;
 	}	
 	
-	i = 1;
+	i = 2;
 	int facnumber = f;
 	while(i <= facnumber){
-		if(facnumber % i == 0){	
+		if(facnumber % i == 0 && isPrime(i)){	
 			sprintf(tempchar, "%d", i);
 			if(i != 1){
 				strcat(retchar, tempchar);
@@ -52,25 +70,33 @@ char* factor (char* number){
 		}
 		i++;
 	}
+	printf("%s", retchar);
 	return retchar;
 }
 
 char* fibonacci(char* number){
-	char retchar = malloc(1000);
-	char tempchar = malloc(50);
-	float f = 0;
+	char* retchar = (char *)malloc(10000);
+	char* tempchar = (char *)malloc(500);
+	double f = 0;
 	int i = 0;
-	f = (float)atof(number);
+	if(numbersOnly(number) == -1){
+		char * letter_found = "Number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f = strtod(number,NULL);
 
 	if(f == 0){
-		printf("Cannot fibnoacci, bad input\n");
-		return;
+		char * error_zero = "Cannot fibnoacci, bad input\n";
+		printf("%s",error_zero);
+		return error_zero;
 	}
 
 	while( i < strlen(number)){   //(sizeof(number)/sizeof(char*))){
 		if(number[i] == '.'){
-			printf("Cannot factor, bad input\n");
-			return;
+			char * error_decimal = "Decimal found, bad input\n";
+			printf("%s",error_decimal);
+			return error_decimal;
 		}
 		i++;
 	}	
@@ -83,13 +109,17 @@ char* fibonacci(char* number){
 	strcpy(retchar, tempchar);
 	strcat(retchar, "\n");
 	while(index < f-1){
-
+		
 		sprintf(tempchar, "%d", k);
 		strcat(retchar, tempchar);
 		strcat(retchar, "\n");
 
 		l = k;
 		k = k + j;
+		if(k < 0){
+			char * error_msg = "Overflowing integer. Use smaller number. Stopping here.";
+			return error_msg;
+		}
 		j = l;
 		index++;
 	}
@@ -98,10 +128,20 @@ char* fibonacci(char* number){
 }
 
 char* add (char* number1, char* number2){	
-	char retchar = malloc(1000);
-	float f1 = 0, f2 = 0, f3 = 0;
-	f1 = (float)atof(number1);
-	f2 = (float)atof(number2);
+	char* retchar = (char *)malloc(1000);
+	double f1 = 0, f2 = 0, f3 = 0;
+	if(numbersOnly(number1) == -1){
+		char * letter_found = "First number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	if(numbersOnly(number2) == -1){
+		char * letter_found = "Second number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f1 = strtod(number1,NULL);
+	f2 = strtod(number2,NULL);
 	
 	f3 = f1 + f2;
 
@@ -111,10 +151,20 @@ char* add (char* number1, char* number2){
 }
 
 char* subtract (char* number1, char* number2){
-	char retchar = malloc(1000);
-	float f1 = 0, f2 = 0, f3 = 0;
-	f1 = (float)atof(number1);
-	f2 = (float)atof(number2);
+	char* retchar = (char *)malloc(1000);
+	double f1 = 0, f2 = 0, f3 = 0;
+	if(numbersOnly(number1) == -1){
+		char * letter_found = "First number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	if(numbersOnly(number2) == -1){
+		char * letter_found = "Second number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f1 = strtod(number1,NULL);
+	f2 = strtod(number2,NULL);
 	
 	f3 = f1 - f2;
 
@@ -124,10 +174,20 @@ char* subtract (char* number1, char* number2){
 }
 
 char* multiply(char* number1, char* number2){
-	char retchar = malloc(1000);
-	float f1 = 0, f2 = 0, f3 = 0;
-	f1 = (float)atof(number1);
-	f2 = (float)atof(number2);
+	char* retchar = (char *)malloc(1000);
+	double f1 = 0, f2 = 0, f3 = 0;
+	if(numbersOnly(number1) == -1){
+		char * letter_found = "First number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	if(numbersOnly(number2) == -1){
+		char * letter_found = "Second number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f1 = strtod(number1,NULL);
+	f2 = strtod(number2,NULL);
 	
 	f3 = f1 * f2;
 
@@ -137,14 +197,25 @@ char* multiply(char* number1, char* number2){
 }
 
 char* divide(char* number1, char* number2){
-	char retchar = malloc(1000);
-	float f1 = 0, f2 = 0, f3 = 0;
-	f1 = (float)atof(number1);
-	f2 = (float)atof(number2);
+	char* retchar = (char *)malloc(1000);
+	double f1 = 0, f2 = 0, f3 = 0;
+	if(numbersOnly(number1) == -1){
+		char * letter_found = "First number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	if(numbersOnly(number2) == -1){
+		char * letter_found = "Second number contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f1 = strtod(number1,NULL);
+	f2 = strtod(number2,NULL);
 
 	if(f2 == 0){
-		printf("Cannot divide by 0\n");
-		return;
+		char * error_div_zero = "Cannot divide by 0\n";
+		printf("%s",error_div_zero);
+		return error_div_zero;
 	}
 
 	f3 = f1/ f2;
@@ -155,10 +226,20 @@ char* divide(char* number1, char* number2){
 }
 
 char* exponent(char* number, char* exponent){
-	char retchar = malloc(1000);
-	float f1 = 0, f2 = 0, f3 = 0;
-	f1 = (float)atof(number);
-	f2 = (float)atof(exponent);
+	char* retchar = (char*)(char *)malloc(1000);
+	double f1 = 0, f2 = 0, f3 = 0;
+	if(numbersOnly(number) == -1){
+		char * letter_found = "Base contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	if(numbersOnly(exponent) == -1){
+		char * letter_found = "Exponent contains a letter. Not performing operation.\n";
+		printf("%s",letter_found);
+		return letter_found;
+	}
+	f1 = strtod(number,NULL);
+	f2 = strtod(exponent,NULL);
 	
 	f3 = pow(f1, f2);
 	sprintf(retchar, "%f", f3);
