@@ -47,6 +47,16 @@ const char* fib_doc_path = "/fib/doc";
 const char* fac_doc_path = "/factor/doc";
 /*Doc file strings go here*/
 char* result_ptr;
+/*Descriptions of each function*/
+char* fac_msg = "Compute the prime factors of a number.\n";
+char* fib_msg = "Compute the first n fibonacci numbers.\n";
+char* add_msg = "Add two numbers.\n";
+char* sub_msg = "Subtract two numbers.\n";
+char* mul_msg = "Multiply two numbers.\n";
+char* div_msg = "Divide two numbers.\n";
+char* exp_msg = "Raises a number to a given exponent.\n";
+
+
 
 void make_dir(struct stat *stbuf){
 
@@ -164,40 +174,47 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 	} 
 	 else if (strcmp(path, add_doc_path) == 0) {
 		//Set result_ptr here to appropriate doc string
+		result_ptr = add_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		//Change strlen(mathfs_str) to strlen(result_ptr);
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, sub_doc_path) == 0) {
+		result_ptr = sub_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, mul_doc_path) == 0) {
+		result_ptr = mul_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, div_doc_path) == 0) {
+		result_ptr = div_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, exp_doc_path) == 0) {
+		result_ptr = exp_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, fib_doc_path) == 0) {
+		result_ptr = fib_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	} 
 	 else if (strcmp(path, fac_doc_path) == 0) {
+		result_ptr = fac_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
 	}
 	 else
 		res = valid_path(path,stbuf);
