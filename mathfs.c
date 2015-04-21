@@ -274,19 +274,19 @@ static int mathfs_open(const char *path, struct fuse_file_info *fi)
 
 	if(strcmp(path, mathfs_path) == 0)
 		bad_open = 0;
-  	if(strcmp(path, add_path) == 0)
+  	if(strcmp(path, add_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, sub_path) == 0)
+	if(strcmp(path, sub_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, mul_path) == 0)
+	if(strcmp(path, mul_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, div_path) == 0)
+	if(strcmp(path, div_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, exp_path) == 0)
+	if(strcmp(path, exp_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, fib_path) == 0)
+	if(strcmp(path, fib_doc_path) == 0)
 		bad_open = 0;
-	if(strcmp(path, exp_path) == 0)
+	if(strcmp(path, fac_doc_path) == 0)
 		bad_open = 0;
 	
 	if(bad_open == 1)
@@ -321,7 +321,7 @@ static int mathfs_read(const char *path, char *buf, size_t size, off_t offset,
 		bad_read = 0;
 	if(strcmp(path, fib_path) == 0)
 		bad_read = 0;
-	if(strcmp(path, exp_path) == 0)
+	if(strcmp(path, fac_path) == 0)
 		bad_read = 0;
 	
 	if(bad_read == 1)
