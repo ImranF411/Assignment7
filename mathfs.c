@@ -1,9 +1,5 @@
-/*TODO:
- * Add math functions to mathfs.
- * Make math functions work.
- * Make write up
- * Create doc entries in math folders.
- * Remove mathfs file.
+/*
+ * Made by Imran Farooqui and Michael Sabbagh
  */
 
 
