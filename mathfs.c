@@ -47,6 +47,7 @@ const char* fib_doc_path = "/fib/doc";
 const char* fac_doc_path = "/factor/doc";
 /*Doc file strings go here*/
 char* result_ptr;
+int good_path;
 /*Descriptions of each function*/
 char* fac_msg = "Compute the prime factors of a number.\n";
 char* fib_msg = "Compute the first n fibonacci numbers.\n";
@@ -119,6 +120,7 @@ int valid_path(const char *path, struct stat *stbuf)
 		}
 		break;
 	default:
+		good_path = 0;
 		ret = -ENOENT;
 		break;
 	}
@@ -144,6 +146,7 @@ int valid_path(const char *path, struct stat *stbuf)
 	}
 	
 	free(path_copy);
+	good_path = 1;
 	return ret;
 }
 
@@ -162,15 +165,21 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 
 	printf("getattr(\"%s\")\n",path);
 
+	result_ptr = NULL;
+	good_path = 0;
+
 	memset(stbuf, 0, sizeof(struct stat));
 	if (strcmp(path, "/") == 0) {
 		stbuf->st_mode = S_IFDIR | 0755;
 		stbuf->st_nlink = 2;
+		good_path = 1;
 	} 
 	 else if (strcmp(path, mathfs_path) == 0) {
+		result_ptr = mathfs_str;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = strlen(mathfs_str);
+		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, add_doc_path) == 0) {
 		//Set result_ptr here to appropriate doc string
@@ -179,42 +188,49 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 		stbuf->st_nlink = 1;
 		//Change strlen(mathfs_str) to strlen(result_ptr);
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, sub_doc_path) == 0) {
 		result_ptr = sub_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, mul_doc_path) == 0) {
 		result_ptr = mul_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, div_doc_path) == 0) {
 		result_ptr = div_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, exp_doc_path) == 0) {
 		result_ptr = exp_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, fib_doc_path) == 0) {
 		result_ptr = fib_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	} 
 	 else if (strcmp(path, fac_doc_path) == 0) {
 		result_ptr = fac_msg;
 		stbuf->st_mode = S_IFREG | 0444;
 		stbuf->st_nlink = 1;
 		stbuf->st_size = strlen(result_ptr);
+		good_path = 1;
 	}
 	 else
 		res = valid_path(path,stbuf);
@@ -276,6 +292,10 @@ static int mathfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		filler(buf, ".", NULL, 0);
 		filler(buf, "..", NULL, 0);
 		filler(buf, "/doc" + 1, NULL, 0);
+	}else if(good_path == 1){
+		printf("good_path status: %d\n",good_path);
+		filler(buf, ".", NULL, 0);
+		filler(buf, "..", NULL, 0);
 	}else
 		return -ENOENT;
 	return 0;
@@ -309,7 +329,7 @@ static int mathfs_open(const char *path, struct fuse_file_info *fi)
 	if(strcmp(path, fac_doc_path) == 0)
 		bad_open = 0;
 	
-	if(bad_open == 1)
+	if(good_path != 1 && bad_open != 0)
 		return -ENOENT;
 
 	if ((fi->flags & 3) != O_RDONLY)
@@ -344,15 +364,17 @@ static int mathfs_read(const char *path, char *buf, size_t size, off_t offset,
 	if(strcmp(path, fac_doc_path) == 0)
 		bad_read = 0;
 	
-	if(bad_read == 1)
+	if(good_path != 1 && bad_read != 0)
 		return -ENOENT;
 	
 	//In below lines, replace mathfs_str to result_ptr
-	len = strlen(mathfs_str);
+	//len = strlen(mathfs_str);
+	len = strlen(result_ptr);
 	if (offset < len) {
 		if (offset + size > len)
 			size = len - offset;
-		memcpy(buf, mathfs_str + offset, size);
+		//memcpy(buf, mathfs_str + offset, size);
+		memcpy(buf, result_ptr + offset, size);
 	} else
 		size = 0;
 
