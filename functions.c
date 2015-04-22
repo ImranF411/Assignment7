@@ -13,8 +13,12 @@ char* divide(char* number1, char* number2);
 char* exponent(char* number, char* exponent);
 int isPrime(int number);
 
+char retchar[10000];
+char tempchar[500];
+
+
 int not_main(int argc, char** argv){
-	factor("223092870");
+	factor("123");
 	return 0;
 }
 
@@ -29,8 +33,8 @@ int numbersOnly(char* toCheck){
 }
 
 char* factor (char* number){
-	char* retchar = (char *)malloc(1000);
-	char* tempchar = (char *)malloc(50);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f = 0;
 	int i = 0;
 	if(numbersOnly(number) == -1){
@@ -75,8 +79,8 @@ char* factor (char* number){
 }
 
 char* fibonacci(char* number){
-	char* retchar = (char *)malloc(10000);
-	char* tempchar = (char *)malloc(500);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f = 0;
 	int i = 0;
 	if(numbersOnly(number) == -1){
@@ -128,7 +132,8 @@ char* fibonacci(char* number){
 }
 
 char* add (char* number1, char* number2){	
-	char* retchar = (char *)malloc(1000);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f1 = 0, f2 = 0, f3 = 0;
 	if(numbersOnly(number1) == -1){
 		char * letter_found = "First number contains a letter. Not performing operation.\n";
@@ -151,7 +156,8 @@ char* add (char* number1, char* number2){
 }
 
 char* subtract (char* number1, char* number2){
-	char* retchar = (char *)malloc(1000);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f1 = 0, f2 = 0, f3 = 0;
 	if(numbersOnly(number1) == -1){
 		char * letter_found = "First number contains a letter. Not performing operation.\n";
@@ -174,7 +180,8 @@ char* subtract (char* number1, char* number2){
 }
 
 char* multiply(char* number1, char* number2){
-	char* retchar = (char *)malloc(1000);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f1 = 0, f2 = 0, f3 = 0;
 	if(numbersOnly(number1) == -1){
 		char * letter_found = "First number contains a letter. Not performing operation.\n";
@@ -197,7 +204,8 @@ char* multiply(char* number1, char* number2){
 }
 
 char* divide(char* number1, char* number2){
-	char* retchar = (char *)malloc(1000);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f1 = 0, f2 = 0, f3 = 0;
 	if(numbersOnly(number1) == -1){
 		char * letter_found = "First number contains a letter. Not performing operation.\n";
@@ -226,7 +234,8 @@ char* divide(char* number1, char* number2){
 }
 
 char* exponent(char* number, char* exponent){
-	char* retchar = (char*)(char *)malloc(1000);
+	memset(retchar, 0, sizeof(retchar));
+	memset(tempchar, 0, sizeof(tempchar));
 	double f1 = 0, f2 = 0, f3 = 0;
 	if(numbersOnly(number) == -1){
 		char * letter_found = "Base contains a letter. Not performing operation.\n";
